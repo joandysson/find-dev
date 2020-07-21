@@ -1,6 +1,8 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "author": "Joandysson Gama",
+  "email": "joandysson.gama@gmail.com",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
