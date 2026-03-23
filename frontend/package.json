@@ -8,10 +8,10 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
-    "axios": "^0.19.2",
+    "axios": "^1.13.6",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-scripts": "3.3.1"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -21,6 +21,14 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "overrides": {
+    "@tootallnate/once": "^3.0.1",
+    "nth-check": "^2.1.1",
+    "postcss": "^8.4.31",
+    "serialize-javascript": "^7.0.3",
+    "underscore": "^1.13.7",
+    "webpack-dev-server": "^5.2.1"
   },
   "browserslist": {
     "production": [
