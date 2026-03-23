@@ -1,0 +1,66 @@
+diff --git a/node_modules/react-scripts/config/webpackDevServer.config.js b/node_modules/react-scripts/config/webpackDevServer.config.js
+index 522a81b..916b8d3 100644
+--- a/node_modules/react-scripts/config/webpackDevServer.config.js
++++ b/node_modules/react-scripts/config/webpackDevServer.config.js
+@@ -20,6 +20,7 @@ const host = process.env.HOST || '0.0.0.0';
+ const sockHost = process.env.WDS_SOCKET_HOST;
+ const sockPath = process.env.WDS_SOCKET_PATH; // default: '/ws'
+ const sockPort = process.env.WDS_SOCKET_PORT;
++const httpsConfig = getHttpsConfig();
+ 
+ module.exports = function (proxy, allowedHost) {
+   const disableFirewall =
+@@ -51,6 +52,8 @@ module.exports = function (proxy, allowedHost) {
+     },
+     // Enable gzip compression of generated files.
+     compress: true,
++    hot: false,
++    liveReload: true,
+     static: {
+       // By default WebpackDevServer serves physical files from current directory
+       // in addition to all the virtual build products that it serves from memory.
+@@ -99,8 +102,11 @@ module.exports = function (proxy, allowedHost) {
+       publicPath: paths.publicUrlOrPath.slice(0, -1),
+     },
+ 
+-    https: getHttpsConfig(),
+     host,
++    server: httpsConfig ? {
++      type: 'https',
++      options: httpsConfig,
++    } : 'http',
+     historyApiFallback: {
+       // Paths with dots should still use the history fallback.
+       // See https://github.com/facebook/create-react-app/issues/387.
+@@ -109,7 +115,11 @@ module.exports = function (proxy, allowedHost) {
+     },
+     // `proxy` is run between `before` and `after` `webpack-dev-server` hooks
+     proxy,
+-    onBeforeSetupMiddleware(devServer) {
++    setupMiddlewares(middlewares, devServer) {
++      if (!devServer) {
++        throw new Error('webpack-dev-server is not defined');
++      }
++
+       // Keep `evalSourceMapMiddleware`
+       // middlewares before `redirectServedPath` otherwise will not have any effect
+       // This lets us fetch source contents from webpack for the error overlay
+@@ -119,8 +129,7 @@ module.exports = function (proxy, allowedHost) {
+         // This registers user provided middleware for proxy reasons
+         require(paths.proxySetup)(devServer.app);
+       }
+-    },
+-    onAfterSetupMiddleware(devServer) {
++
+       // Redirect to `PUBLIC_URL` or `homepage` from `package.json` if url not match
+       devServer.app.use(redirectServedPath(paths.publicUrlOrPath));
+ 
+@@ -130,6 +139,8 @@ module.exports = function (proxy, allowedHost) {
+       // it used the same host and port.
+       // https://github.com/facebook/create-react-app/issues/2272#issuecomment-302832432
+       devServer.app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));
++
++      return middlewares;
+     },
+   };
+ };
