@@ -17,7 +17,7 @@ module.exports = {
             return response.json({"message": "Usuário já se encontra cadastrado"});
         }
 
-        const response_axios = await axios.get(`http://api.github.com/users/${github_username}`);
+        const response_axios = await axios.get(`https://api.github.com/users/${github_username}`);
         let {name = login, avatar_url, bio } = response_axios.data;
         const techsArray = parseStringToArray(techs);
 
